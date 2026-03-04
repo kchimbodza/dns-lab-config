@@ -6,6 +6,6 @@ services:
       - "53:53/udp"
       - "53:53/tcp"
     volumes:
-      - ./config/dns-server.conf:/etc/bind/named.conf.local
+      - ./config/dns-server.conf:/etc/bind/named.conf
       - ./config/zones:/etc/bind/zones
     restart: unless-stopped

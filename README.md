@@ -34,6 +34,9 @@ dig @127.0.0.1 server02.lab.myviewsontech.local
 - Containerised infrastructure setup
 
 ## Verification Output
-![Forward Lookup](screenshots/nslookup-forward.png)
-![Reverse Lookup](screenshots/nslookup-reverse.png)
+
+![Forward Lookup - server01](screenshots/forward-lookup-server01.png)
+![Forward Lookup - server02](screenshots/forward-lookup-server02.png)
+![Forward Lookup - server03](screenshots/forward-lookup-server03.png)
+![Reverse Lookup](screenshots/reverse-lookup.png)
 ![Dig Query](screenshots/dig-query.png)

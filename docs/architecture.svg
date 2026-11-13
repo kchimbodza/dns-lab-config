@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" width="960" height="330" role="img" aria-labelledby="t d">
+  <title id="t">How a query reaches the BIND9 lab server</title>
+  <desc id="d">Forward lookup: dig or nslookup on the host asks 127.0.0.1 port 53 for server02.lab.myviewsontech.local. Docker forwards port 53 (UDP and TCP) to the BIND 9.18 container, named finds the name in the forward zone lab.myviewsontech.local and answers 192.168.10.11 with the authoritative flag. Reverse lookup: the same path asks for 192.168.10.10, named looks in the reverse zone 10.168.192.in-addr.arpa and answers server01. Recursion is off, so the server only answers for its two zones.</desc>
+  <style>
+    :root { --ink:#1f2937; --sub:#57606a; --line:#d0d7de; --card:#ffffff; --on:#4f46e5; --tint:#eef2ff; --ok:#1a7f37; }
+    @media (prefers-color-scheme: dark) {
+      :root { --ink:#e6edf3; --sub:#9198a1; --line:#3d444d; --card:#161b22; --on:#818cf8; --tint:#1e1b4b; --ok:#3fb950; }
+    }
+    text { font-family: Inter, "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+    .lane  { font-size:12px; font-weight:700; fill:var(--sub); letter-spacing:.06em; }
+    .title { font-size:13.5px; font-weight:700; fill:var(--ink); text-anchor:middle; }
+    .sub   { font-size:10.5px; fill:var(--sub); text-anchor:middle; }
+    .ok    { font-size:11px; font-weight:600; fill:var(--ok); text-anchor:middle; }
+    .node  { fill:var(--card); stroke:var(--line); stroke-width:1.5; }
+    .db    { fill:var(--tint); stroke:var(--on); stroke-width:1.5; }
+    .group { fill:none; stroke:var(--line); stroke-width:1.5; stroke-dasharray:5 4; }
+    .wire  { stroke:var(--line); stroke-width:1.5; fill:none; }
+    .head  { fill:var(--line); }
+    .dot   { fill:var(--on); }
+    .t1 { animation: g 6s infinite ease-in-out; }
+    .t2 { animation: g 6s infinite ease-in-out; animation-delay:-3s; }
+    @keyframes g {
+      0%,6%   { transform:translateX(95px); }  16%,22% { transform:translateX(287px); }
+      32%,38% { transform:translateX(479px); } 48%,54% { transform:translateX(671px); }
+      64%,72% { transform:translateX(863px); } 82%,100% { transform:translateX(95px); }
+    }
+    @media (prefers-reduced-motion: reduce) { .t1, .t2 { animation:none; } }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="head" d="M0 0 L10 5 L0 10z"/></marker>
+  </defs>
+
+  <!-- container boundary around the two middle columns of both lanes -->
+  <rect class="group" x="396" y="30" width="358" height="262" rx="12"/>
+  <text class="sub" x="575" y="284">Docker container  ·  internetsystemsconsortium/bind9:9.18</text>
+
+  <!-- Lane 1: forward lookup -->
+  <text class="lane" x="20" y="26">1 · FORWARD LOOKUP  (name → address)</text>
+  <g>
+    <rect class="node" x="20"  y="40" width="150" height="70" rx="10"/>
+    <text class="title" x="95"  y="68">dig / nslookup</text><text class="sub" x="95"  y="86">server02 … IN A ?</text>
+    <rect class="node" x="212" y="40" width="150" height="70" rx="10"/>
+    <text class="title" x="287" y="68">127.0.0.1:53</text><text class="sub" x="287" y="86">Docker port, UDP + TCP</text>
+    <rect class="node" x="404" y="40" width="150" height="70" rx="10"/>
+    <text class="title" x="479" y="68">named</text><text class="sub" x="479" y="86">BIND 9.18, recursion no</text>
+    <rect class="db"   x="596" y="40" width="150" height="70" rx="10"/>
+    <text class="title" x="671" y="68">Forward zone</text><text class="sub" x="671" y="86">lab.myviewsontech.local</text>
+    <rect class="node" x="788" y="40" width="150" height="70" rx="10"/>
+    <text class="title" x="863" y="66">Answer</text>
+    <text class="ok" x="863" y="84">A 192.168.10.11</text><text class="sub" x="863" y="100">aa flag, 1 ms</text>
+    <path class="wire" d="M170 75 H210" marker-end="url(#a)"/>
+    <path class="wire" d="M362 75 H402" marker-end="url(#a)"/>
+    <path class="wire" d="M554 75 H594" marker-end="url(#a)"/>
+    <path class="wire" d="M746 75 H786" marker-end="url(#a)"/>
+    <circle class="dot t1" cx="0" cy="40" r="5"/>
+  </g>
+
+  <!-- Lane 2: reverse lookup -->
+  <text class="lane" x="20" y="166">2 · REVERSE LOOKUP  (address → name)</text>
+  <g>
+    <rect class="node" x="20"  y="180" width="150" height="70" rx="10"/>
+    <text class="title" x="95"  y="208">nslookup</text><text class="sub" x="95"  y="226">192.168.10.10 PTR ?</text>
+    <rect class="node" x="212" y="180" width="150" height="70" rx="10"/>
+    <text class="title" x="287" y="208">127.0.0.1:53</text><text class="sub" x="287" y="226">same published port</text>
+    <rect class="node" x="404" y="180" width="150" height="70" rx="10"/>
+    <text class="title" x="479" y="208">named</text><text class="sub" x="479" y="226">reads named.conf</text>
+    <rect class="db"   x="596" y="180" width="150" height="70" rx="10"/>
+    <text class="title" x="671" y="208">Reverse zone</text><text class="sub" x="671" y="226">10.168.192.in-addr.arpa</text>
+    <rect class="node" x="788" y="180" width="150" height="70" rx="10"/>
+    <text class="title" x="863" y="206">Answer</text>
+    <text class="ok" x="863" y="224">PTR server01</text><text class="sub" x="863" y="240">.lab.myviewsontech.local</text>
+    <path class="wire" d="M170 215 H210" marker-end="url(#a)"/>
+    <path class="wire" d="M362 215 H402" marker-end="url(#a)"/>
+    <path class="wire" d="M554 215 H594" marker-end="url(#a)"/>
+    <path class="wire" d="M746 215 H786" marker-end="url(#a)"/>
+    <circle class="dot t2" cx="0" cy="180" r="5"/>
+  </g>
+  <text class="sub" x="480" y="318">config/dns-server.conf is mounted as /etc/bind/named.conf; config/zones/ is mounted at /etc/bind/zones. Recursion is off: only these two zones are answered.</text>
+</svg>
